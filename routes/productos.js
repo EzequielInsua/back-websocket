@@ -1,82 +1,36 @@
-const router = require('express').Router();
-const container = require('../db/container.js');
+const router  = require('express').Router();
+const { getAllProducts,
+        addProduct,
+        getProductRandom,
+        getProductById,
+        editById,
+        deleteById,
+        requiredFields } = require('../controller/routerProducts.controller.js');
 
-const filename = 'productos.txt';
-const contenedor = new container(filename);
-const { Engine } = require('../config/engine.js');
 
+// const requiredFields = [ 'name', 'description', 'code', 'price', 'thumbnail', 'stock' ];
 
-router.get("/", async (req, res) => {
-    try {
-        const products = await contenedor.getAll();
-        return res.render("products", 
-        { 
-            products,
-            haveProducts: products.length > 0
-        });
-    } catch {
-    res.send(
-        "Lo sentimos. Ha ocurrido un error. Intente nuevamente mas tarde."
-    );
-    }
-});
-
-router.post("/", async (req, res) => {
-const { title, price, thumbnail } = req.body;
-try {
-    await contenedor.save({ title, price, thumbnail });
-    return res.redirect("/");
-} catch (e) {
-    return res
-    .status(404)
-    .send({
-        error: true,
-        msg: "Lo sentimos. Ha ocurrido un error. Intente nuevamente mas tarde.",
+const checkFields = (req, res, next) => {
+    requiredFields.forEach(field => {
+        if( req.body[field] === undefined) {
+            res.send( { 'error': true,
+                        'data': `Some fields are missing. Please complete them first. Fieds are ${ requiredFields.join(', ') }` })
+        }
     });
-}
-});
+    next()
+};
 
-router.get("/productoRandom", async (req, res) => {
-try {
-    const products = await contenedor.getAll();
-    const index = Math.round(Math.random() * products.length);
-    res.send(products[index]);
-} catch {
-    res.send(
-    "Lo sentimos. Ha ocurrido un error. Intente nuevamente mas tarde."
-    );
-}
-});
 
-router.get("/:id", async (req, res) => {
-const { id } = req.query;
-try {
-    const data = await contenedor.getById(parseInt(id));
-    return res.send(data);
-} catch (e) {
-    return res.status(404).send({ error: true, msg: "Producto no encontrado" });
-}
-});
+router.get("/", getAllProducts);
 
-router.put("/:id", async (req, res) => {
-const { id } = req.query;
-try {
-    const producto = await contenedor.editById(parseInt(id), req.body);
-    return res.send({ error: false, msg: "Producto Modificado", producto });
-} catch (e) {
-    return res.status(404).send({ error: true, msg: "Producto no encontrado" });
-}
-});
+router.post("/", checkFields, addProduct);
 
-router.delete("/:id", async (req, res) => {
-try {
-    const { id } = req.query;
-    const data = await contenedor.deleteById(parseInt(id));
-    return res.send({ error: false, msg: "Producto Eliminado", data });
-} catch (e) {
-    return res.status(404).send({ error: true, msg: "Producto no encontrado" });
-}
-});
+router.get("/productoRandom", getProductRandom);
 
-module.exports = router;
-  
+router.get("/:id", getProductById);
+
+router.put("/:id", editById);
+
+router.delete("/:id", deleteById);
+
+module.exports = { router, requiredFields };

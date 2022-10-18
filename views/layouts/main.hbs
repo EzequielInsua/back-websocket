@@ -59,10 +59,10 @@
                     <div class="input-group mb-0">
                         <div class="input-group-append">
                         <input
-                            id="nombre"
+                            id="email"
                             type="text"
                             class="form-control"
-                            placeholder="Nombre"
+                            placeholder="Email"
                         />
                         <input
                         id="enviar_msj"
@@ -108,13 +108,13 @@
                 }
             }
 
-            socket.on('products', data => {
-                render_products(data);
-                console.log(data);
+            socket.on('products', ({data, wasError}) => {
+                if (!wasError){
+                    render_products(data);
+                }
             })
 
             const send_new_product = (event) => {
-                console.log("ingreso a send_new_product")
                 const title = document.getElementById('title').value;
                 const price = document.getElementById('price').value;
                 const thumbnail = document.getElementById('thumbnail').value;
@@ -130,8 +130,9 @@
             function render_msj(data) {
             const html = data.map( (msg) => `<li class="clearfix">
                                             <div class="message-data">
-                                                <span class="fw-bold">[${msg.autor}]</span>
-                                                <span class="fst-italic">${msg.msj}</span>
+                                                <span class="fw-bold text-primary">${msg.email}</span>
+                                                <span class="text-success">[${msg.created_at}]</span>
+                                                <span class="fst-italic">${msg.msg}</span>
                                             </div>
                                             </li>`).join(" ");
 
@@ -139,10 +140,10 @@
             }
 
             function enviarMensaje(event) {
-            const nombre = document.getElementById("nombre").value;
-            const msj = document.getElementById("chat_mensaje").value;
+            const email = document.getElementById("email").value;
+            const msg = document.getElementById("chat_mensaje").value;
             document.getElementById("chat_mensaje").value = "";
-            socket.emit("new_msg", { autor: nombre, msj: msj });
+            socket.emit("new_msg", { email, msg });
             return false;
             }
 
