@@ -3,7 +3,7 @@ const knex = require("knex");
 
 const requiredFields = [ 'title', 'price', 'thumbnail' ];
 
-class Products {
+class ContainerSQL {
 
     constructor(config, tableName ){
         this.tableName = tableName;
@@ -137,4 +137,4 @@ class Products {
 }
 
 
-module.exports = { Products, requiredFields }
+module.exports = { ContainerSQL, requiredFields }

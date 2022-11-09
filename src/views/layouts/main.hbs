@@ -65,6 +65,36 @@
                             placeholder="Email"
                         />
                         <input
+                            id="name"
+                            type="text"
+                            class="form-control"
+                            placeholder="Nombre"
+                        />
+                        <input
+                            id="lastname"
+                            type="text"
+                            class="form-control"
+                            placeholder="Apellido"
+                        />
+                        <input
+                            id="age"
+                            type="text"
+                            class="form-control"
+                            placeholder="Edad"
+                        />
+                        <input
+                            id="alias"
+                            type="text"
+                            class="form-control"
+                            placeholder="Alias"
+                        />
+                        <input
+                            id="avatar"
+                            type="text"
+                            class="form-control"
+                            placeholder="avatar"
+                        />
+                        <input
                         id="enviar_msj"
                         type="submit"
                         class="form-control"
@@ -118,6 +148,7 @@
                 const title = document.getElementById('title').value;
                 const price = document.getElementById('price').value;
                 const thumbnail = document.getElementById('thumbnail').value;
+                console.log('enviando products_html')
                 socket.emit('new_product', 
                     { 
                         title, 
@@ -128,23 +159,30 @@
 
 
             function render_msj(data) {
-            const html = data.map( (msg) => `<li class="clearfix">
-                                            <div class="message-data">
-                                                <span class="fw-bold text-primary">${msg.email}</span>
-                                                <span class="text-success">[${msg.created_at}]</span>
-                                                <span class="fst-italic">${msg.msg}</span>
-                                            </div>
-                                            </li>`).join(" ");
-
+                console.log('render',JSON.stringify(data)); 
+                const html = data.map( (msg) => `<li class="clearfix">
+                                                <div class="message-data">
+                                                    <span class="fw-bold text-primary">${msg.email}</span>
+                                                    <span class="text-success">[${msg.created_at}]</span>
+                                                    <span class="fst-italic">${msg.msg}</span>
+                                                </div>
+                                                </li>`).join(" ");
                 document.getElementById("mensajes").innerHTML = html;
             }
 
             function enviarMensaje(event) {
-            const email = document.getElementById("email").value;
-            const msg = document.getElementById("chat_mensaje").value;
-            document.getElementById("chat_mensaje").value = "";
-            socket.emit("new_msg", { email, msg });
-            return false;
+                const email = document.getElementById("email").value;
+                const name = document.getElementById("name").value;
+                const lastname = document.getElementById("lastname").value;
+                const age = document.getElementById("age").value;
+                const alias = document.getElementById("alias").value;
+                const avatar = document.getElementById("avatar").value;
+                const msg = document.getElementById("chat_mensaje").value;
+                document.getElementById("chat_mensaje").value = "";
+                const data = {email,name,lastname,age,alias,avatar, msg}
+                console.log('frond',JSON.stringify(data));
+                socket.emit("new_msg", data);
+                return false;
             }
 
             socket.on("mensajes", (data) => {

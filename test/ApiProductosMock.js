@@ -1,9 +1,8 @@
-const knex = require("knex");
 
-const {Products} = require('../controller/products.controller');
+const { ContainerSQL } = require("../src/containers/ContainerSQL");
 const {generarProducto} = require('./generarProducto');
 
-class ApiProductoMock extends Products{
+class ApiProductoMock extends ContainerSQL{
     constructor(config, tableName) {
         super(config, tableName);
     }

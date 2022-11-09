@@ -2,9 +2,9 @@
 // const filename = 'products.json';
 // const contenedor = new container(filename);
 const express = require('express');
-const {ApiProductoMock} = require('../test/ApiProductosMock');
-const { Products, requiredFields } = require('../controller/products.controller.js');
-const { productsTableName, mariadbConfig } = require('../config/mariadb.config.js');
+const {ApiProductoMock} = require('../../test/ApiProductosMock');
+const { ContainerSQL, requiredFields } = require('../containers/ContainerSQL');
+const { productsTableName, mariadbConfig } = require('../../config/mariadb.config.js');
 const dbProducts = new ApiProductoMock(mariadbConfig, productsTableName);
 // const ApiProducto = new ApiProductoMock(mariadbConfig, productsTableName);
 

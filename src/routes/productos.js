@@ -6,7 +6,7 @@ const { getAllProducts,
         getProductById,
         editById,
         deleteById,
-        requiredFields } = require('../controller/routerProducts.controller.js');
+        requiredFields } = require('./routerProducts.controller.js');
 
 
 // const requiredFields = [ 'name', 'description', 'code', 'price', 'thumbnail', 'stock' ];

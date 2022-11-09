@@ -1,5 +1,5 @@
 const {normalize, schema}  = require('normalizr');
-const ContainerMongoDb = require('../../controller/ContainerMongoDb');
+const ContainerMongoDb = require('../../containers/ContainerMongoDb');
 
 /* 
     {
@@ -46,7 +46,7 @@ class messagesDAOMongo extends ContainerMongoDb {
             text: [textSchema]
         });
         const normalizedData = normalize(messages.data || {}, postSchema);
-        console.log(normalizedData)
+        // console.log(normalizedData)
         return {wasError: false, data: normalizedData}
     }
     insertMessages(data) {

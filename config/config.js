@@ -1,8 +1,10 @@
 module.exports = {
-    TypeDB: 'firebase',
+    TypeDB: 'mongodb',
+
     fileSystem: {
         path: './DB'
     },
+
     mongodb: {
         cnxStr:`mongodb://localhost:27017/ecommerce`,
         options: {
@@ -10,8 +12,10 @@ module.exports = {
             useNewUrlParser: true,
             useUnifiedTopology: true
         },
-        MessageColections: "messages"
+        MessageColections: "messages",
+        productsTableName: "productos"
     },
+
     firebase: 
     {
         "type": "service_account",
@@ -25,17 +29,27 @@ module.exports = {
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-pdpjc%40imperkartdb.iam.gserviceaccount.com"
     },
+
     sqlite3: {
+        msgTableName: 'messages',
         client: 'sqlite3',
         connection: {
-            filename: ``,
+            filename: "./db/ecommerce.sqlite",
         },
         useNullAsDefault: true
     },
+    
     mariaDb: {
-        client: 'mysql',
-        connection: {
-        
+        productsTableName: 'products',
+        mariaDbConfig: {
+            client: 'mysql',
+            connection: {
+                host : '127.0.0.1',
+                port : 3306,
+                user : 'root',
+                // password : '',
+                database : 'codereze'
+            }
         }
     }
 }
