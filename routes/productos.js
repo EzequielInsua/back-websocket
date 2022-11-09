@@ -2,6 +2,7 @@ const router  = require('express').Router();
 const { getAllProducts,
         addProduct,
         getProductRandom,
+        postProductTest,
         getProductById,
         editById,
         deleteById,
@@ -26,6 +27,8 @@ router.get("/", getAllProducts);
 router.post("/", checkFields, addProduct);
 
 router.get("/productoRandom", getProductRandom);
+
+router.post("/productos-test", postProductTest);
 
 router.get("/:id", getProductById);
 

@@ -1,33 +1,36 @@
 // const container = require('../db/container.js');
 // const filename = 'products.json';
 // const contenedor = new container(filename);
+const express = require('express');
+const {ApiProductoMock} = require('../test/ApiProductosMock');
 const { Products, requiredFields } = require('../controller/products.controller.js');
 const { productsTableName, mariadbConfig } = require('../config/mariadb.config.js');
-const dbProducts = new Products( mariadbConfig, productsTableName );
+const dbProducts = new ApiProductoMock(mariadbConfig, productsTableName);
+// const ApiProducto = new ApiProductoMock(mariadbConfig, productsTableName);
 
 
 
 const getAllProducts = async (req, res) => {
     try {
-      const { wasError, data:products } = await dbProducts.getAll();
-      if (wasError){
+        const { wasError, data:products } = await dbProducts.getAll();
+        if (wasError){
         return res.render("products", 
-        { 
-          products,
-          haveProducts: false
-        });
-      }
-      return res.render("products", 
-        { 
-          products,
-          haveProducts: products.length > 0
-        });
+            {
+                products,
+                haveProducts: false
+            });
+        }
+        return res.render("products",
+            {
+                products,
+                haveProducts: products.length > 0
+            });
     } catch {
-      res.send(
-        "Lo sentimos. Ha ocurrido un error. Intente nuevamente mas tarde."
-      );
+        res.send(
+            "Lo sentimos. Ha ocurrido un error. Intente nuevamente mas tarde."
+        );
     }
-  }
+}
 
 
 const addProduct = async (req, res) => {
@@ -55,6 +58,14 @@ const getProductRandom = async (req, res) => {
         res.send(
         "Lo sentimos. Ha ocurrido un error. Intente nuevamente mas tarde."
         );
+    }
+}
+
+const postProductTest = async (req, res, next) => {
+    try{
+        res.json(ApiProducto.popular(req.query.cant));
+    } catch (e){
+        next(e);
     }
 }
 
@@ -96,7 +107,8 @@ module.exports = {  getAllProducts,
                     addProduct,
                     getProductById,
                     getProductRandom,
+                    postProductTest,
                     editById,
                     deleteById,
                     requiredFields
-                 }
+                }

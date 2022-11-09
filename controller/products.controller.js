@@ -3,7 +3,6 @@ const knex = require("knex");
 
 const requiredFields = [ 'title', 'price', 'thumbnail' ];
 
-
 class Products {
 
     constructor(config, tableName ){

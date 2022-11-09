@@ -7,10 +7,13 @@ const { router: routerProducts } = require('./routes/productos');
 const { Products } = require('./controller/products.controller.js');
 const { productsTableName, mariadbConfig } = require('./config/mariadb.config.js');
 const { msgTableName, sqliteConfig } = require('./config/sqlite3.config.js');
-const Messages = require('./controller/messages.controller');
+const messagesDAOMongo = require('./daos/messages/messagesDAOMongo');
+const { ApiProductoMock } = require('./test/ApiProductosMock');
+const {mongodb} = require('./config/config');
 
 
-const dbProducts = new Products( mariadbConfig, productsTableName );
+// const dbProducts = new Products( mariadbConfig, productsTableName );
+const dbProducts = new ApiProductoMock(mongodb.MessageColections, productsTableName);
 const PORT = 8090;
 
 const app = express();
@@ -19,7 +22,7 @@ const io = new IOServer(httpServer);
 
 
 
-const dbMsg = new Messages( sqliteConfig, msgTableName );
+const dbMsg = new messagesDAOMongo();
 
 app.use('/productos', routerProducts);
 
@@ -54,23 +57,24 @@ const server = httpServer.listen( PORT, () => {
 server.on( "Error", error => console.log(`Error while listening on port ${PORT}: ${error}`) );
 
 io.on('connection', async ( socket ) => {
-    const products = await dbProducts.getAll();
-    const { wasError, data } = await dbMsg.getAll();
+    const products = await dbProducts.popular();
+    const { wasError, data } = await dbMsg.getAllMessages();
     socket.emit('products', products);
     !wasError && socket.emit("mensajes", data);
 
-
     socket.on("new_msg", async (data) => {
-        const {email, msg} = data;
-        const { wasError, data:newMsg} = await dbMsg.insert( {email, msg});
+
+        const {authors, text} = data;
+        const { wasError, data: newMsg} = await dbMsg.insertMessages({authors, text});
+        console.log(data);
         if (!wasError){
-            const { wasError:Error, data } = await dbMsg.getAll();
+            const { wasError:Error, data } = await dbMsg.getAllMessages();
             !Error && io.sockets.emit("mensajes", data);
         }
         // socket.to().emit('evento', 'data')
-      });
+    });
 
-      socket.on('new_product', async ( newProduct ) => {
+    socket.on('new_product', async ( newProduct ) => {
         await dbProducts.save(newProduct);
         const products = await dbProducts.getAll();
         io.sockets.emit('products', products);
