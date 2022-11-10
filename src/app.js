@@ -64,8 +64,7 @@ io.on('connection', async ( socket ) => {
 
     socket.on("new_msg", async (data) => {
         console.log('new_msg',data);
-        const {authors, text} = data;
-        const { wasError, data: newMsg} = await dbMsg.insertMessages({authors, text});
+        const { wasError, data: newMsg} = await dbMsg.insertMessages({...data});
         
         if (!wasError){
             const { wasError:Error, data } = await dbMsg.getAllMessages();

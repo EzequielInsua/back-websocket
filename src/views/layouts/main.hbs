@@ -160,27 +160,26 @@
 
             function render_msj(data) {
                 console.log('render',JSON.stringify(data)); 
-                const html = data.map( (msg) => `<li class="clearfix">
+                {{!-- const html = data.map( (msg) => `<li class="clearfix">
                                                 <div class="message-data">
                                                     <span class="fw-bold text-primary">${msg.email}</span>
                                                     <span class="text-success">[${msg.created_at}]</span>
                                                     <span class="fst-italic">${msg.msg}</span>
                                                 </div>
                                                 </li>`).join(" ");
-                document.getElementById("mensajes").innerHTML = html;
+                document.getElementById("mensajes").innerHTML = html; --}}
             }
 
             function enviarMensaje(event) {
-                const email = document.getElementById("email").value;
+                const id = document.getElementById("email").value;
                 const name = document.getElementById("name").value;
                 const lastname = document.getElementById("lastname").value;
                 const age = document.getElementById("age").value;
                 const alias = document.getElementById("alias").value;
                 const avatar = document.getElementById("avatar").value;
-                const msg = document.getElementById("chat_mensaje").value;
+                const text = document.getElementById("chat_mensaje").value;
                 document.getElementById("chat_mensaje").value = "";
-                const data = {email,name,lastname,age,alias,avatar, msg}
-                console.log('frond',JSON.stringify(data));
+                const data = {id,name,lastname,age,alias,avatar,text}
                 socket.emit("new_msg", data);
                 return false;
             }
