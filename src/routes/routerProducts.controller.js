@@ -63,7 +63,7 @@ const getProductRandom = async (req, res) => {
 
 const postProductTest = async (req, res, next) => {
     try{
-        res.json(ApiProducto.popular(req.query.cant));
+        res.json(dbProducts.popular(req.query.cant));
     } catch (e){
         next(e);
     }
